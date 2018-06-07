@@ -12,7 +12,7 @@ Sign up for an OpenNode account at <https://opennode.co>.
 
 1. Go to *Admin » Plugins » Add New* in admin panel.
 
-2. Enter **coingate woocommerce** in search box.
+2. Enter **opennode woocommerce** in search box.
 
 3. Click **Install Now**.
 
@@ -20,7 +20,7 @@ Sign up for an OpenNode account at <https://opennode.co>.
 
 5. Enter [API Credentials] data on WooCommerce-OpenNode Plugin Settings: *Admin » WooCommerce* click on **Checkout** tab find **OpenNode** in Payment Gateways table and click **Settings**.
 
-6. Don't forget check **Enable Bitcoin payments via OpenNode** checkbox in WooCommerce-Coingate Plugin settings.
+6. Don't forget check **Enable Bitcoin payments via OpenNode** checkbox in WooCommerce-OpenNode Plugin settings.
 
 ### via WooCommerce FTP Uploader
 
@@ -34,7 +34,7 @@ Sign up for an OpenNode account at <https://opennode.co>.
 
 5. Enter [API Credentials] data on WooCommerce-OpenNode Plugin Settings: *Admin » WooCommerce* click on **Checkout** tab find **OpenNode** in Payment Gateways table and click **Settings**.
 
-6. Don't forget check **Enable Bitcoin payments via OpenNode** checkbox in WooCommerce-Coingate Plugin settings.
+6. Don't forget check **Enable Bitcoin payments via OpenNode** checkbox in WooCommerce-OpenNode Plugin settings.
 
 ### via FTP
 
@@ -46,4 +46,4 @@ Sign up for an OpenNode account at <https://opennode.co>.
 
 4. Enter [API Credentials] data on WooCommerce-OpenNode Plugin Settings: *Admin » WooCommerce* click on **Checkout** tab find **OpenNode** in Payment Gateways table and click **Settings**.
 
-5. Don't forget check **Enable Bitcoin payments via OpenNode** checkbox in WooCommerce-Coingate Plugin settings.
+5. Don't forget check **Enable Bitcoin payments via OpenNode** checkbox in WooCommerce-OpenNode Plugin settings.

@@ -1,6 +1,6 @@
 <?php
 
-// CoinGate Class
+// OpenNode Class
 require(dirname(__FILE__) . '/lib/OpenNode.php');
 
 // Exception Class
