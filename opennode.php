@@ -6,7 +6,7 @@ Plugin URI: https://opennode.co
 Description: Accept Bitcoin Instantly via OpenNode
 Version: 1.0
 Author: OpenNode
-Author URI: https://opennode.co
+Author URI: https://opennode.co/about
 */
 
 add_action('plugins_loaded', 'opennode_init');
