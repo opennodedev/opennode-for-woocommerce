@@ -5,21 +5,24 @@ class Exception
 {
     public static function formatError($error)
     {
-        $error = '';
+        $reason= '';
         $message = '';
 
-        if (isset($error['error']))
+        if (isset($error['reason']))
             $reason = $error['reason'];
 
+        if (isset($error['error']))
+            $message = $error['error'];
+        
         if (isset($error['message']))
             $message = $error['message'];
         
-        return $reason . $message;
+        return $reason . ' - ' . $message;
     }
 
     public static function throwException($http_status, $error)
     {
-        $reason = 'default';
+        $reason = $error['error'];
 
         switch ($http_status) {
             case 400:
@@ -57,4 +60,3 @@ class Exception
         }
     }
 }
-

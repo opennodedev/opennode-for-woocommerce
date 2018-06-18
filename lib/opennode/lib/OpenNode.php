@@ -43,7 +43,7 @@ class OpenNode
 
         # Check if credentials was passed
         if (empty($auth_token))
-            \OpenNode\Exception::throwException(400, array('reason' => 'AuthTokenMissing'));
+            \OpenNode\Exception::throwException(400, array('reason' => 'CredentialsMissing', 'message' => 'Set up your credentials on plugin\'s settings'));
 
         # Check if right environment passed
         $environments = array('live', 'sandbox');
