@@ -4,14 +4,14 @@
 Plugin Name: WooCommerce Payment Gateway - OpenNode
 Plugin URI: https://opennode.co
 Description: Accept Bitcoin Instantly via OpenNode
-Version: 1.0
+Version: 1.1
 Author: OpenNode
 Author URI: https://opennode.co/about
 */
 
 add_action('plugins_loaded', 'opennode_init');
 
-define('OPENNODE_WOOCOMMERCE_VERSION', '1.0');
+define('OPENNODE_WOOCOMMERCE_VERSION', '1.1');
 define('OPENNODE_CHECKOUT_PATH', 'https://opennode.co/checkout/');
 
 function opennode_init()
@@ -42,6 +42,7 @@ function opennode_init()
             $this->description = $this->get_option('description');
             $this->api_secret = $this->get_option('api_secret');
             $this->api_auth_token = (empty($this->get_option('api_auth_token')) ? $this->get_option('api_secret') : $this->get_option('api_auth_token'));
+            $this->auto_settle = $this->get_option('auto_settle');            
 
             add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
             add_action('woocommerce_thankyou_opennode', array($this, 'thankyou'));
@@ -73,7 +74,7 @@ function opennode_init()
                 'description' => array(
                     'title' => __('Description', 'woocommerce'),
                     'type' => 'textarea',
-                    'description' => __('The payment method description which a user sees at the checkout of your store.', 'woocommerce'),
+                    'description' => __('The payment method description which a customer sees at the checkout of your store.', 'woocommerce'),
                     'default' => __('Powered by OpenNode.'),
                 ),
                 'title' => array(
@@ -85,8 +86,18 @@ function opennode_init()
                 'api_auth_token' => array(
                     'title' => __('API Auth Token', 'woocommerce'),
                     'type' => 'text',
-                    'description' => __('OpenNode API Key', 'woocommerce'),
+                    'description' => __('Your personal API Key. Generate one <a href="https://opennode.co/settings" target="_blank">here</a>.  ', 'woocommerce'),
                     'default' => (empty($this->get_option('api_secret')) ? '' : $this->get_option('api_secret')),
+                ),
+                'auto_settle' => array(
+                    'title' => __('Instant Exchange', 'woocommerce'),
+                    'type' => 'select',
+                    'options' => array(
+                        0 => __('No', 'woocommerce'),
+                        1 => __('Yes', 'woocommerce')
+                    ),
+                    'description' => __('Enable Instant Exchange to reduce bitcoin\'s volatility by converting all BTC payments to your native currency automatically. <br> Instant Exchange can only be used after KYC approval.', 'woocomerce'),
+                    'default' => 0,
                 )
             );
         }
@@ -199,6 +210,7 @@ function opennode_init()
                     'auth_token'    => (empty($this->api_auth_token) ? $this->api_secret : $this->api_auth_token),
                     'environment'   => 'live',
                     'user_agent'    => ('OpenNode - WooCommerce v' . WOOCOMMERCE_VERSION . ' Plugin v' . OPENNODE_WOOCOMMERCE_VERSION),
+                    'auto_settle'   => $this->auto_settle
                 )
             );
         }
