@@ -42,7 +42,6 @@ function opennode_init()
             $this->description = $this->get_option('description');
             $this->api_secret = $this->get_option('api_secret');
             $this->api_auth_token = (empty($this->get_option('api_auth_token')) ? $this->get_option('api_secret') : $this->get_option('api_auth_token'));
-            $this->auto_settle = $this->get_option('auto_settle');            
 
             add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
             add_action('woocommerce_thankyou_opennode', array($this, 'thankyou'));
@@ -88,16 +87,6 @@ function opennode_init()
                     'type' => 'text',
                     'description' => __('Your personal API Key. Generate one <a href="https://opennode.co/settings" target="_blank">here</a>.  ', 'woocommerce'),
                     'default' => (empty($this->get_option('api_secret')) ? '' : $this->get_option('api_secret')),
-                ),
-                'auto_settle' => array(
-                    'title' => __('Instant Exchange', 'woocommerce'),
-                    'type' => 'select',
-                    'options' => array(
-                        0 => __('No', 'woocommerce'),
-                        1 => __('Yes', 'woocommerce')
-                    ),
-                    'description' => __('Enable Instant Exchange to reduce bitcoin\'s volatility by converting all BTC payments to your native currency automatically. <br> Instant Exchange can only be used after KYC approval.', 'woocomerce'),
-                    'default' => 0,
                 )
             );
         }
@@ -209,8 +198,7 @@ function opennode_init()
                 array(
                     'auth_token'    => (empty($this->api_auth_token) ? $this->api_secret : $this->api_auth_token),
                     'environment'   => 'live',
-                    'user_agent'    => ('OpenNode - WooCommerce v' . WOOCOMMERCE_VERSION . ' Plugin v' . OPENNODE_WOOCOMMERCE_VERSION),
-                    'auto_settle'   => $this->auto_settle
+                    'user_agent'    => ('OpenNode - WooCommerce v' . WOOCOMMERCE_VERSION . ' Plugin v' . OPENNODE_WOOCOMMERCE_VERSION)
                 )
             );
         }

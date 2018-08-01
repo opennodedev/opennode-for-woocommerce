@@ -9,7 +9,6 @@ class OpenNode
     public static $auth_token  = '';
     public static $environment = 'live';
     public static $user_agent  = '';
-    public static $auto_settle = '';
     public static $curlopt_ssl_verifypeer = FALSE;
 
     public static function config($authentication)
@@ -22,9 +21,6 @@ class OpenNode
 
         if (isset($authentication['user_agent']))
             self::$user_agent = $authentication['user_agent'];
-
-        if (isset($authentication['auto_settle']))
-            self::$auto_settle = $authentication['auto_settle'];
     }
 
     public static function testConnection($authentication = array())
@@ -44,9 +40,6 @@ class OpenNode
         $environment = isset($authentication['environment']) ? $authentication['environment'] : self::$environment;
         $user_agent  = isset($authentication['user_agent']) ? $authentication['user_agent'] : (isset(self::$user_agent) ? self::$user_agent : (self::USER_AGENT_ORIGIN . ' v' . self::VERSION));
         $curlopt_ssl_verifypeer = isset($authentication['curlopt_ssl_verifypeer']) ? $authentication['curlopt_ssl_verifypeer'] : self::$curlopt_ssl_verifypeer;
-
-        # Add Auto Settle Information
-        $params['auto_settle'] = self::$auto_settle;
 
         # Check if credentials was passed
         if (empty($auth_token))
