@@ -70,17 +70,17 @@ function opennode_init()
                     'description' => '',
                     'default' => 'no',
                 ),
-                'description' => array(
-                    'title' => __('Description', 'woocommerce'),
-                    'type' => 'textarea',
-                    'description' => __('The payment method description which a customer sees at the checkout of your store.', 'woocommerce'),
-                    'default' => __('Powered by OpenNode.'),
-                ),
                 'title' => array(
                     'title' => __('Title', 'woocommerce'),
                     'type' => 'text',
                     'description' => __('The payment method title which a customer sees at the checkout of your store.', 'woocommerce'),
                     'default' => __('Pay with Bitcoin: on-chain or with Lightning', 'woocommerce'),
+                ),
+                'description' => array(
+                    'title' => __('Description', 'woocommerce'),
+                    'type' => 'textarea',
+                    'description' => __('The payment method description which a customer sees at the checkout of your store.', 'woocommerce'),
+                    'default' => __('Powered by OpenNode'),
                 ),
                 'api_auth_token' => array(
                     'title' => __('API Auth Token', 'woocommerce'),
