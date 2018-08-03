@@ -113,7 +113,6 @@ function opennode_init()
             $opennode_order_id = get_post_meta($order->get_id(), 'opennode_order_id', true);
 
             if (empty($opennode_order_id)) {
-                error_log(print_r(get_woocommerce_currency(),1));
                 $params = array(
                     'order_id'          => $order->get_id(),
                     'price'             => (strtoupper(get_woocommerce_currency()) === 'BTC') ? number_format($order->get_total()*100000000, 8, '.', '') : number_format($order->get_total()*100000000, 8, '.', ''),
