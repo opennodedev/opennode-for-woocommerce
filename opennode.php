@@ -113,9 +113,10 @@ function opennode_init()
             $opennode_order_id = get_post_meta($order->get_id(), 'opennode_order_id', true);
 
             if (empty($opennode_order_id)) {
+                error_log(print_r(get_woocommerce_currency(),1));
                 $params = array(
                     'order_id'          => $order->get_id(),
-                    'price'             => number_format($order->get_total(), 8, '.', ''),
+                    'price'             => (strtoupper(get_woocommerce_currency()) === 'BTC') ? number_format($order->get_total()*100000000, 8, '.', '') : number_format($order->get_total()*100000000, 8, '.', ''),
                     'fiat'              => get_woocommerce_currency(),
                     'callback_url'      => trailingslashit(get_bloginfo('wpurl')) . '?wc-api=wc_gateway_opennode',
                     'success_url'       => add_query_arg('order', $order->get_id(), add_query_arg('key', $order->get_order_key(), $this->get_return_url($order))),
