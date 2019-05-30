@@ -4,14 +4,14 @@
 Plugin Name: WooCommerce Payment Gateway - OpenNode
 Plugin URI: https://opennode.co
 Description: Accept Bitcoin Instantly via OpenNode
-Version: 1.3.1
+Version: 1.4.0
 Author: OpenNode
 Author URI: https://opennode.co/about
 */
 
 add_action('plugins_loaded', 'opennode_init');
 
-define('OPENNODE_WOOCOMMERCE_VERSION', '1.3.1');
+define('OPENNODE_WOOCOMMERCE_VERSION', '1.4.0');
 define('OPENNODE_CHECKOUT_PATH', 'https://checkout.opennode.co/');
 
 function opennode_init()
@@ -171,7 +171,7 @@ function opennode_init()
                 switch ($cgOrder->status) {
                     case 'paid':
                         $statusWas = "wc-" . $order->get_status();
-                        $order->add_order_note(__('Payment is confirmed and has been credited to your OpenNode account. Purchased goods/services can be securely delivered to the buyer.', 'opennode'));
+                        $order->add_order_note(__('Payment is settled and has been credited to your OpenNode account. Purchased goods/services can be securely delivered to the customer.', 'opennode'));
                         $order->payment_complete();
 
                         if ($order->get_status() === 'processing' && ($statusWas === 'wc-expired' || $statusWas === 'wc-canceled')) {
@@ -182,7 +182,16 @@ function opennode_init()
                         }
                         break;
                     case 'processing':
-                        $order->add_order_note(__('Customer has paid via Chain. Payment is awaiting 1 confirmation by Bitcoin network, do not send purchased goods/services yet.', 'opennode'));
+                        $order->add_order_note(__('Customer has paid via standard on-Chain. Payment is awaiting 1 confirmation by the Bitcoin network, DO NOT SEND purchased goods/services UNTIL payment has been marked as PAID', 'opennode'));
+                        break;
+                    case 'underpaid':
+                        $missing_amt = number_format($cgOrder->missing_amt/100000000, 8, '.', '');
+                        $order->add_order_note(__('Customer has paid via standard on-Chain, but has underpaid by ' . $missing_amt . ' BTC. Waiting on user to send the remainder before marking as PAID.', 'opennode'));
+                        break;
+                    case 'refunded':
+                        $refund_id = $cgOrder->refund['id'];
+                        $order->add_order_note(__('Customer has canceled the payment. Refund ID - ' . $refund_id . ' .', 'opennode'));
+                        $order->update_status('cancelled');
                         break;
                 }
             } catch (Exception $e) {
