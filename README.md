@@ -6,7 +6,7 @@ Read the plugin installation instructions below to get started with OpenNode pay
 
 ## Install
 
-Sign up for an OpenNode account at <https://opennode.co>.
+Sign up for an OpenNode account at <https://opennode.com>.
 
 ### via [WordPress Plugin Manager](https://codex.wordpress.org/Plugins_Add_New_Screen)
 
@@ -28,7 +28,7 @@ Sign up for an OpenNode account at <https://opennode.co>.
 
 2. Go to *Admin » Plugins » Add New* in admin panel.
 
-3. Upload *pennode-for-woocommerce-1.0.0.zip* in *Upload Plugin*
+3. Upload *opennode-for-woocommerce-1.0.0.zip* in *Upload Plugin*
 
 4. Activate the plugin through the **Plugins** menu in WordPress.
 

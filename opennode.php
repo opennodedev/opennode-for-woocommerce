@@ -2,17 +2,17 @@
 
 /*
 Plugin Name: WooCommerce Payment Gateway - OpenNode
-Plugin URI: https://opennode.co
+Plugin URI: https://opennode.com
 Description: Accept Bitcoin Instantly via OpenNode
 Version: 1.4.0
 Author: OpenNode
-Author URI: https://opennode.co/about
+Author URI: https://opennode.com/about
 */
 
 add_action('plugins_loaded', 'opennode_init');
 
 define('OPENNODE_WOOCOMMERCE_VERSION', '1.4.0');
-define('OPENNODE_CHECKOUT_PATH', 'https://checkout.opennode.co/');
+define('OPENNODE_CHECKOUT_PATH', 'https://checkout.opennode.com/');
 
 function opennode_init()
 {
@@ -52,7 +52,7 @@ function opennode_init()
         {
             ?>
             <h3><?php _e('OpenNode', 'woothemes'); ?></h3>
-            <p><?php _e('Accept Bitcoin instantly through the OpenNode.co.', 'woothemes'); ?></p>
+            <p><?php _e('Accept Bitcoin instantly through the OpenNode.com.', 'woothemes'); ?></p>
             <table class="form-table">
                 <?php $this->generate_settings_html(); ?>
             </table>
@@ -85,7 +85,7 @@ function opennode_init()
                 'api_auth_token' => array(
                     'title' => __('API Auth Token', 'woocommerce'),
                     'type' => 'text',
-                    'description' => __('Your personal API Key. Generate one <a href="https://app.opennode.co/settings/api" target="_blank">here</a>.  ', 'woocommerce'),
+                    'description' => __('Your personal API Key. Generate one <a href="https://app.opennode.com/settings/api" target="_blank">here</a>.  ', 'woocommerce'),
                     'default' => (empty($this->get_option('api_secret')) ? '' : $this->get_option('api_secret')),
                 )
             );
