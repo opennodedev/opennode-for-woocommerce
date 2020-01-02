@@ -42,6 +42,7 @@ function opennode_init()
             $this->description = $this->get_option('description');
             $this->api_secret = $this->get_option('api_secret');
             $this->api_auth_token = (empty($this->get_option('api_auth_token')) ? $this->get_option('api_secret') : $this->get_option('api_auth_token'));
+            $this->checkout_url = $this->get_option('checkout_url');
 
             add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
             add_action('woocommerce_thankyou_opennode', array($this, 'thankyou'));
@@ -87,7 +88,13 @@ function opennode_init()
                     'type' => 'text',
                     'description' => __('Your personal API Key. Generate one <a href="https://app.opennode.com/settings/api" target="_blank">here</a>.  ', 'woocommerce'),
                     'default' => (empty($this->get_option('api_secret')) ? '' : $this->get_option('api_secret')),
-                )
+                ),
+                'checkout_url' => array(
+                  'title' => __('Custom checkout URL', 'woocommerce'),
+                  'description' => __('URL for the white-labeled checkout', 'woocommerce'),
+                  'type' => 'text',
+                  'default' => 'https://checkout.opennode.com/',
+              ),
             );
         }
 
@@ -129,13 +136,13 @@ function opennode_init()
 
                 return array(
                     'result' => 'success',
-                    'redirect' => OPENNODE_CHECKOUT_PATH . $opennode_order_id,
+                    'redirect' => $this->checkout_url . $opennode_order_id,
                 );
             }
             else {
                 return array(
                     'result' => 'success',
-                    'redirect' => OPENNODE_CHECKOUT_PATH . $opennode_order_id,
+                    'redirect' => $this->checkout_url . $opennode_order_id,
                 );
             }
         }
