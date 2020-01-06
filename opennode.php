@@ -86,14 +86,14 @@ function opennode_init()
                 'api_auth_token' => array(
                     'title' => __('API Auth Token', 'woocommerce'),
                     'type' => 'text',
-                    'description' => __('Your personal API Key. Generate one <a href="https://app.opennode.com/settings/api" target="_blank">here</a>.  ', 'woocommerce'),
+                    'description' => __('Your personal API Key. Generate one <a href="https://app.opennode.com/developers/integrations" target="_blank">here</a>.  ', 'woocommerce'),
                     'default' => (empty($this->get_option('api_secret')) ? '' : $this->get_option('api_secret')),
                 ),
                 'checkout_url' => array(
                   'title' => __('Checkout URL', 'woocommerce'),
                   'description' => __('URL for the checkout', 'woocommerce'),
                   'type' => 'text',
-                  'default' => 'https://checkout.opennode.com/',
+                  'default' => OPENNODE_CHECKOUT_PATH,
               ),
             );
         }
