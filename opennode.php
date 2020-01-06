@@ -4,7 +4,7 @@
 Plugin Name: WooCommerce Payment Gateway - OpenNode
 Plugin URI: https://opennode.com
 Description: Accept Bitcoin Instantly via OpenNode
-Version: 1.4.0
+Version: 1.4.1
 Author: OpenNode
 Author URI: https://opennode.com/about
 */
@@ -42,6 +42,7 @@ function opennode_init()
             $this->description = $this->get_option('description');
             $this->api_secret = $this->get_option('api_secret');
             $this->api_auth_token = (empty($this->get_option('api_auth_token')) ? $this->get_option('api_secret') : $this->get_option('api_auth_token'));
+            $this->checkout_url = $this->get_option('checkout_url');
 
             add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
             add_action('woocommerce_thankyou_opennode', array($this, 'thankyou'));
@@ -52,7 +53,7 @@ function opennode_init()
         {
             ?>
             <h3><?php _e('OpenNode', 'woothemes'); ?></h3>
-            <p><?php _e('Accept Bitcoin instantly through the OpenNode.com.', 'woothemes'); ?></p>
+            <p><?php _e('Accept Bitcoin instantly through OpenNode.com.', 'woothemes'); ?></p>
             <table class="form-table">
                 <?php $this->generate_settings_html(); ?>
             </table>
@@ -85,9 +86,15 @@ function opennode_init()
                 'api_auth_token' => array(
                     'title' => __('API Auth Token', 'woocommerce'),
                     'type' => 'text',
-                    'description' => __('Your personal API Key. Generate one <a href="https://app.opennode.com/settings/api" target="_blank">here</a>.  ', 'woocommerce'),
+                    'description' => __('Your personal API Key. Generate one <a href="https://app.opennode.com/developers/integrations" target="_blank">here</a>.  ', 'woocommerce'),
                     'default' => (empty($this->get_option('api_secret')) ? '' : $this->get_option('api_secret')),
-                )
+                ),
+                'checkout_url' => array(
+                  'title' => __('Checkout URL', 'woocommerce'),
+                  'description' => __('URL for the checkout', 'woocommerce'),
+                  'type' => 'text',
+                  'default' => OPENNODE_CHECKOUT_PATH,
+              ),
             );
         }
 
@@ -129,13 +136,13 @@ function opennode_init()
 
                 return array(
                     'result' => 'success',
-                    'redirect' => OPENNODE_CHECKOUT_PATH . $opennode_order_id,
+                    'redirect' => $this->checkout_url . $opennode_order_id,
                 );
             }
             else {
                 return array(
                     'result' => 'success',
-                    'redirect' => OPENNODE_CHECKOUT_PATH . $opennode_order_id,
+                    'redirect' => $this->checkout_url . $opennode_order_id,
                 );
             }
         }
