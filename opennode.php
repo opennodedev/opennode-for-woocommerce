@@ -53,7 +53,7 @@ function opennode_init()
         {
             ?>
             <h3><?php _e('OpenNode', 'woothemes'); ?></h3>
-            <p><?php _e('Accept Bitcoin instantly through the OpenNode.com.', 'woothemes'); ?></p>
+            <p><?php _e('Accept Bitcoin instantly through OpenNode.com.', 'woothemes'); ?></p>
             <table class="form-table">
                 <?php $this->generate_settings_html(); ?>
             </table>
@@ -90,8 +90,8 @@ function opennode_init()
                     'default' => (empty($this->get_option('api_secret')) ? '' : $this->get_option('api_secret')),
                 ),
                 'checkout_url' => array(
-                  'title' => __('Custom checkout URL', 'woocommerce'),
-                  'description' => __('URL for the white-labeled checkout', 'woocommerce'),
+                  'title' => __('Checkout URL', 'woocommerce'),
+                  'description' => __('URL for the checkout', 'woocommerce'),
                   'type' => 'text',
                   'default' => 'https://checkout.opennode.com/',
               ),
