@@ -195,6 +195,10 @@ function opennode_init()
                         $missing_amt = number_format($cgOrder->missing_amt/100000000, 8, '.', '');
                         $order->add_order_note(__('Customer has paid via standard on-Chain, but has underpaid by ' . $missing_amt . ' BTC. Waiting on user to send the remainder before marking as PAID.', 'opennode'));
                         break;
+                    case 'expired':
+                      $order->add_order_note(__('Payment expired', 'opennode'));
+                      $order->update_status('cancelled');
+                      break;
                     case 'refunded':
                         $refund_id = $cgOrder->refund['id'];
                         $order->add_order_note(__('Customer has canceled the payment. Refund ID - ' . $refund_id . ' .', 'opennode'));
