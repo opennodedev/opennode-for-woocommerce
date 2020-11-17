@@ -33,7 +33,6 @@ function opennode_init()
             $this->id = 'opennode';
             $this->has_fields = false;
             $this->method_title = 'OpenNode';
-            $this->icon = apply_filters('woocommerce_opennode_icon', PLUGIN_DIR . 'assets/bitcoin.png');
 
             $this->init_form_fields();
             $this->init_settings();
