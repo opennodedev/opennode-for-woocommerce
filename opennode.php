@@ -4,14 +4,14 @@
 Plugin Name: WooCommerce Payment Gateway - OpenNode
 Plugin URI: https://opennode.com
 Description: Accept Bitcoin Instantly via OpenNode
-Version: 1.4.4
+Version: 1.5.0
 Author: OpenNode
 Author URI: https://opennode.com/about
 */
 
 add_action('plugins_loaded', 'opennode_init');
 
-define('OPENNODE_WOOCOMMERCE_VERSION', '1.4.4');
+define('OPENNODE_WOOCOMMERCE_VERSION', '1.5.0');
 define('OPENNODE_CHECKOUT_PATH', 'https://checkout.opennode.com/');
 
 function opennode_init()
@@ -110,10 +110,10 @@ function opennode_init()
 
             $this->init_opennode();
 
-            $description = array();
-            foreach ($order->get_items('line_item') as $item) {
-                $description[] = $item['qty'] . ' × ' . $item['name'];
-            }
+            //$description = array();
+            //foreach ($order->get_items('line_item') as $item) {
+            //    $description[] = $item['qty'] . ' × ' . $item['name'];
+            //}
 
 
             $opennode_order_id = get_post_meta($order->get_id(), 'opennode_order_id', true);
@@ -125,7 +125,7 @@ function opennode_init()
                     'fiat'              => get_woocommerce_currency(),
                     'callback_url'      => trailingslashit(get_bloginfo('wpurl')) . '?wc-api=wc_gateway_opennode',
                     'success_url'       => add_query_arg('order', $order->get_id(), add_query_arg('key', $order->get_order_key(), $this->get_return_url($order))),
-                    'description'       => implode($description, ', '),
+                    'description'       => 'WooCommerce - #' . $order->get_id(),
                     'name'              => $order->get_formatted_billing_full_name(),
                     'email'             => $order->get_billing_email()
                 );
