@@ -124,7 +124,7 @@ function opennode_init()
                     'price'             => (strtoupper(get_woocommerce_currency()) === 'BTC') ? number_format($order->get_total()*100000000, 8, '.', '') : number_format($order->get_total(), 8, '.', ''),
                     'fiat'              => get_woocommerce_currency(),
                     'callback_url'      => trailingslashit(get_bloginfo('wpurl')) . '?wc-api=wc_gateway_opennode',
-                    'success_url'       => add_query_arg('order', $order->get_id(), add_query_arg('key', $order->get_order_key(), $this->get_return_url($order))),
+                    'success_url'       => $order->get_checkout_order_received_url(),
                     'description'       => 'WooCommerce - #' . $order->get_id(),
                     'name'              => $order->get_formatted_billing_full_name(),
                     'email'             => $order->get_billing_email()
