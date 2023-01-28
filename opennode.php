@@ -4,14 +4,14 @@
 Plugin Name: WooCommerce Payment Gateway - OpenNode
 Plugin URI: https://opennode.com
 Description: Accept Bitcoin Instantly via OpenNode
-Version: 1.5.1
+Version: 1.5.2
 Author: OpenNode
 Author URI: https://opennode.com/about
 */
 
 add_action('plugins_loaded', 'opennode_init');
 
-define('OPENNODE_WOOCOMMERCE_VERSION', '1.5.1');
+define('OPENNODE_WOOCOMMERCE_VERSION', '1.5.2');
 define('OPENNODE_CHECKOUT_PATH', 'https://checkout.opennode.com/');
 
 function opennode_init()
@@ -32,7 +32,7 @@ function opennode_init()
 
             $this->id = 'opennode';
             $this->has_fields = false;
-            $this->method_title = 'OpenNode';
+            $this->method_title = __('OpenNode','opennode-for-woocommerce');
 
             $this->init_form_fields();
             $this->init_settings();
@@ -51,8 +51,8 @@ function opennode_init()
         public function admin_options()
         {
             ?>
-            <h3><?php _e('OpenNode', 'woothemes'); ?></h3>
-            <p><?php _e('Accept Bitcoin instantly through OpenNode.com.', 'woothemes'); ?></p>
+            <h3><?php _e('OpenNode', 'opennode-for-woocommerce'); ?></h3>
+            <p><?php _e('Accept Bitcoin instantly through OpenNode.com.', 'opennode-for-woocommerce'); ?></p>
             <table class="form-table">
                 <?php $this->generate_settings_html(); ?>
             </table>
@@ -64,33 +64,33 @@ function opennode_init()
         {
             $this->form_fields = array(
                 'enabled' => array(
-                    'title' => __('Enable OpenNode', 'woocommerce'),
-                    'label' => __('Enable Bitcoin payments via OpenNode', 'woocommerce'),
+                    'title' => __('Enable OpenNode', 'opennode-for-woocommerce'),
+                    'label' => __('Enable Bitcoin payments via OpenNode', 'opennode-for-woocommerce'),
                     'type' => 'checkbox',
                     'description' => '',
                     'default' => 'no',
                 ),
                 'title' => array(
-                    'title' => __('Title', 'woocommerce'),
+                    'title' => __('Title', 'opennode-for-woocommerce'),
                     'type' => 'text',
-                    'description' => __('The payment method title which a customer sees at the checkout of your store.', 'woocommerce'),
-                    'default' => __('Pay with Bitcoin: on-chain or with Lightning', 'woocommerce'),
+                    'description' => __('The payment method title which a customer sees at the checkout of your store.', 'opennode-for-woocommerce'),
+                    'default' => __('Pay with Bitcoin: on-chain or with Lightning', 'opennode-for-woocommerce'),
                 ),
                 'description' => array(
-                    'title' => __('Description', 'woocommerce'),
+                    'title' => __('Description', 'opennode-for-woocommerce'),
                     'type' => 'textarea',
-                    'description' => __('The payment method description which a customer sees at the checkout of your store.', 'woocommerce'),
-                    'default' => __('Powered by OpenNode'),
+                    'description' => __('The payment method description which a customer sees at the checkout of your store.', 'opennode-for-woocommerce'),
+                    'default' => __('Powered by OpenNode', 'opennode-for-woocommerce'),
                 ),
                 'api_auth_token' => array(
-                    'title' => __('API Auth Token', 'woocommerce'),
+                    'title' => __('API Auth Token', 'opennode-for-woocommerce'),
                     'type' => 'text',
-                    'description' => __('Your personal API Key. Generate one <a href="https://app.opennode.com/developers/integrations" target="_blank">here</a>.  ', 'woocommerce'),
+                    'description' => __('Your personal API Key. Generate one <a href="https://app.opennode.com/developers/integrations" target="_blank">here</a>.', 'opennode-for-woocommerce'),
                     'default' => (empty($this->get_option('api_secret')) ? '' : $this->get_option('api_secret')),
                 ),
                 'checkout_url' => array(
-                  'title' => __('Checkout URL', 'woocommerce'),
-                  'description' => __('URL for the checkout', 'woocommerce'),
+                  'title' => __('Checkout URL', 'opennode-for-woocommerce'),
+                  'description' => __('URL for the checkout', 'opennode-for-woocommerce'),
                   'type' => 'text',
                   'default' => OPENNODE_CHECKOUT_PATH,
               ),
@@ -154,31 +154,31 @@ function opennode_init()
 
             try {
                 if (!$order || !$order->get_id()) {
-                    throw new Exception('Order #' . $request['order_id'] . ' does not exists');
+                    throw new Exception(__('Order #','opennode-for-woocommerce') . $request['order_id'] . __(' does not exist','opennode-for-woocommerce'));
                 }
 
                 $token = get_post_meta($order->get_id(), 'opennode_order_id', true);
 
                 if (empty($token) ) {
-                    throw new Exception('Order has OpenNode ID associated');
+                    throw new Exception(__('Order has OpenNode ID associated','opennode-for-woocommerce'));
                 }
 
 
                 if (strcmp(hash_hmac('sha256', $token, $this->api_auth_token), $request['hashed_order']) != 0) {
-                    throw new Exception('Request is not signed with the same API Key, ignoring.');
+                    throw new Exception(__('Request is not signed with the same API Key, ignoring.','opennode-for-woocommerce'));
                 }
 
                 $this->init_opennode();
                 $cgOrder = \OpenNode\Merchant\Order::find($request['id']);
 
                 if (!$cgOrder) {
-                    throw new Exception('OpenNode Order #' . $order->get_id() . ' does not exists');
+                    throw new Exception(__('OpenNode Order #','opennode-for-woocommerce') . $order->get_id() . __(' does not exist','opennode-for-woocommerce'));
                 }
 
                 switch ($cgOrder->status) {
                     case 'paid':
                         $statusWas = "wc-" . $order->get_status();
-                        $order->add_order_note(__('Payment is settled and has been credited to your OpenNode account. Purchased goods/services can be securely delivered to the customer.', 'opennode'));
+                        $order->add_order_note(__('Payment is settled and has been credited to your OpenNode account. Purchased goods/services can be securely delivered to the customer.', 'opennode-for-woocommerce'));
                         $order->payment_complete();
 
                         if ($order->get_status() === 'processing' && ($statusWas === 'wc-expired' || $statusWas === 'wc-canceled')) {
@@ -189,19 +189,19 @@ function opennode_init()
                         }
                         break;
                     case 'processing':
-                        $order->add_order_note(__('Customer has paid via standard on-Chain. Payment is awaiting 1 confirmation by the Bitcoin network, DO NOT SEND purchased goods/services UNTIL payment has been marked as PAID', 'opennode'));
+                        $order->add_order_note(__('Customer has paid via standard on-Chain. Payment is awaiting 1 confirmation by the Bitcoin network, DO NOT SEND purchased goods/services UNTIL payment has been marked as PAID', 'opennode-for-woocommerce'));
                         break;
                     case 'underpaid':
                         $missing_amt = number_format($cgOrder->missing_amt/100000000, 8, '.', '');
-                        $order->add_order_note(__('Customer has paid via standard on-Chain, but has underpaid by ' . $missing_amt . ' BTC. Waiting on user to send the remainder before marking as PAID.', 'opennode'));
+                        $order->add_order_note(__('Customer has paid via standard on-Chain, but has underpaid by ','opennode-for-woocommerce') . $missing_amt . __(' BTC. Waiting on user to send the remainder before marking as PAID.', 'opennode-for-woocommerce'));
                         break;
                     case 'expired':
-                      $order->add_order_note(__('Payment expired', 'opennode'));
+                      $order->add_order_note(__('Payment expired', 'opennode-for-woocommerce'));
                       $order->update_status('cancelled');
                       break;
                     case 'refunded':
                         $refund_id = $cgOrder->refund['id'];
-                        $order->add_order_note(__('Customer has canceled the payment. Refund ID - ' . $refund_id . ' .', 'opennode'));
+                        $order->add_order_note(__('Customer has canceled the payment. Refund ID - ' . $refund_id . ' .', 'opennode-for-woocommerce'));
                         $order->update_status('cancelled');
                         break;
                 }
