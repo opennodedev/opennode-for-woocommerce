@@ -11,7 +11,7 @@ Author URI: https://opennode.com/about
 
 add_action('plugins_loaded', 'opennode_init');
 
-define('OPENNODE_WOOCOMMERCE_VERSION', '1.5.2');
+define('OPENNODE_WOOCOMMERCE_VERSION', '1.5.3');
 define('OPENNODE_CHECKOUT_PATH', 'https://checkout.opennode.com/');
 
 function opennode_init()
