@@ -3,7 +3,9 @@ Contributors: OpenNode
 Donate link: https://opennode.com
 Tags: opennode, bitcoin, lightning, lightning network, accept bitcoin, accept lightning, instant bitcoin, bitcoin processor, bitcoin gateway, payment gateway, payment module, bitcoin module, bitcoin woocommerce, btc
 Requires at least: 4.0
-Tested up to: 6.2.2
+Tested up to: 6.4
+WC requires at least: 5.0
+WC tested up to: 8.5
 
 Start accepting Bitcoin instantly through Lightning Network today. Powered by OpenNode
 
@@ -20,6 +22,7 @@ This plugin allows stores that use Wordpress WooCommerce shopping cart system to
 * Supports traditional on-chain transactions using the new native SegWit addresses (bech32)
 * No setup or recurring fees.
 * Free Lightning Network and scheduled withdrawals.
+* Compatible with WooCommerce 8.3+ and Cart and Checkout blocks.
 
 *In order to use this plugin you have to create an account on [https://opennode.com](https://opennode.com)*
 
@@ -32,3 +35,8 @@ This plugin allows stores that use Wordpress WooCommerce shopping cart system to
 3. Activate the plugin through the 'Plugins' menu in WordPress
 4. Enter [API Credentials]() to WooCommerce-OpenNode Plugin Settings: Admin » WooCommerce » Click on Checkout tab » Find "OpenNode" in Payment Gateways table » Click "Settings"
 6. Check "Enable Cryptocurrency payments via OpenNode" checkbox.
+
+== Changelog ==
+
+= 1.5.4 =
+* Added support for WooCommerce 8.3+ Cart and Checkout blocks
