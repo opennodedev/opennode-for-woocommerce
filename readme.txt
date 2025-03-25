@@ -1,11 +1,14 @@
 === Accept Bitcoin instantly via OpenNode ===
 Contributors: OpenNode
 Donate link: https://opennode.com
-Tags: opennode, bitcoin, lightning, lightning network, accept bitcoin, accept lightning, instant bitcoin, bitcoin processor, bitcoin gateway, payment gateway, payment module, bitcoin module, bitcoin woocommerce, btc
+Tags: bitcoin, lightning-network, woocommerce, payment-gateway, cryptocurrency
 Requires at least: 4.0
 Tested up to: 6.4
 WC requires at least: 5.0
 WC tested up to: 8.5
+Stable tag: 1.5.4
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Start accepting Bitcoin instantly through Lightning Network today. Powered by OpenNode
 
