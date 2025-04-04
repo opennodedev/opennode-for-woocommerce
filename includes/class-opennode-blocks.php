@@ -61,7 +61,20 @@ final class OpenNode_Payment_Blocks extends AbstractPaymentMethodType {
         return [
             'title' => $this->gateway->title,
             'description' => $this->gateway->description,
-            'supports' => $this->gateway->supports,
+            'supports' => [
+                'features' => $this->gateway->supports,
+                'showSavedCards' => false,
+                'showSaveOption' => false,
+                'isEligible' => true,
+            ],
+            'name' => $this->name,
+            'paymentMethodId' => 'opennode',
+            'allowedCountries' => [],
+            'icons' => [
+                'id' => 'bitcoin',
+                'src' => OPENNODE_PLUGIN_URL . 'assets/images/bitcoin.svg',
+                'alt' => 'Bitcoin',
+            ],
         ];
     }
 } 

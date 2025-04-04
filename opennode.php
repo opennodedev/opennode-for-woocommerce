@@ -91,9 +91,8 @@ function opennode_init()
             $this->supports = array(
                 'products',
                 'refunds',
-                'checkout_block',
-                'cart_block',
-                'cart_checkout_block',
+                'blocks',
+                'payment_form',
             );
 
             $this->init_form_fields();
@@ -335,27 +334,12 @@ function opennode_init_blocks_support() {
     );
 
     // Register script for blocks checkout
-    add_action('wp_enqueue_scripts', function() {
-        // Only load on cart and checkout pages
-        if (!is_checkout() && !is_cart()) {
-            return;
-        }
-
-        $script_path = OPENNODE_PLUGIN_URL . 'assets/js/blocks-checkout.js';
-        $script_asset_path = OPENNODE_PLUGIN_PATH . 'assets/js/blocks-checkout.asset.php';
-        
-        $script_asset = file_exists($script_asset_path)
-            ? require($script_asset_path)
-            : array('dependencies' => array(), 'version' => OPENNODE_WOOCOMMERCE_VERSION);
-
+    add_action('enqueue_block_editor_assets', function() {
         wp_register_script(
             'opennode-payment-blocks',
-            $script_path,
-            array_merge(
-                ['wp-element', 'wc-blocks-registry', 'wp-i18n', 'wc-settings', 'wc-blocks-data-store'],
-                $script_asset['dependencies']
-            ),
-            $script_asset['version'],
+            OPENNODE_PLUGIN_URL . 'assets/js/blocks-checkout.js',
+            ['wp-element', 'wc-blocks-registry', 'wp-i18n', 'wc-settings', 'wc-blocks-data-store'],
+            OPENNODE_WOOCOMMERCE_VERSION,
             true
         );
 
@@ -372,6 +356,41 @@ function opennode_init_blocks_support() {
             'title' => $gateway->title,
             'description' => $gateway->description,
             'supports' => $gateway->supports,
+            'name' => 'opennode',
+        ]);
+
+        wp_enqueue_script('opennode-payment-blocks');
+    });
+
+    // Register script for frontend
+    add_action('wp_enqueue_scripts', function() {
+        // Only load on cart and checkout pages
+        if (!is_checkout() && !is_cart()) {
+            return;
+        }
+
+        wp_register_script(
+            'opennode-payment-blocks',
+            OPENNODE_PLUGIN_URL . 'assets/js/blocks-checkout.js',
+            ['wp-element', 'wc-blocks-registry', 'wp-i18n', 'wc-settings', 'wc-blocks-data-store'],
+            OPENNODE_WOOCOMMERCE_VERSION,
+            true
+        );
+
+        if (function_exists('wp_set_script_translations')) {
+            wp_set_script_translations(
+                'opennode-payment-blocks',
+                'opennode-for-woocommerce'
+            );
+        }
+
+        // Add gateway data for the script
+        $gateway = new WC_Gateway_OpenNode();
+        wp_localize_script('opennode-payment-blocks', 'opennode_data', [
+            'title' => $gateway->title,
+            'description' => $gateway->description,
+            'supports' => $gateway->supports,
+            'name' => 'opennode',
         ]);
 
         wp_enqueue_script('opennode-payment-blocks');
