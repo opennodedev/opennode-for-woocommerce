@@ -35,7 +35,10 @@
         canMakePayment: () => true,
         ariaLabel: title,
         supports: {
-            features: settings.supports || [],
+            features: settings.supports || ['products', 'refunds', 'checkout_block', 'cart_block', 'cart_checkout_block'],
+            showSavedCards: false,
+            showSaveOption: false,
+            isGatewayEnabled: true,
         },
     });
 })(); 

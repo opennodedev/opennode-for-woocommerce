@@ -13,7 +13,7 @@ WC requires at least: 5.0
 WC tested up to: 8.5
 */
 
-add_action('plugins_loaded', 'opennode_init');
+add_action('plugins_loaded', 'opennode_init', 11);
 
 define('OPENNODE_WOOCOMMERCE_VERSION', '1.5.5');
 define('OPENNODE_CHECKOUT_PATH', 'https://checkout.opennode.com/');
@@ -25,17 +25,35 @@ add_action('before_woocommerce_init', function() {
     if (class_exists(\Automattic\WooCommerce\Utilities\FeaturesUtil::class)) {
         \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('custom_order_tables', __FILE__, true);
         \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('cart_checkout_blocks', __FILE__, true);
+        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('block_template_controller', __FILE__, true);
     }
 });
 
 function opennode_init()
 {
+    // Check for WooCommerce
     if (!class_exists('WC_Payment_Gateway')) {
+        add_action('admin_notices', function() {
+            echo '<div class="error"><p>' . 
+                 __('OpenNode requires WooCommerce to be installed and active.', 'opennode-for-woocommerce') . 
+                 '</p></div>';
+        });
         return;
-    };
+    }
+
+    // Check for OpenNode library
+    if (!file_exists(__DIR__ . '/lib/opennode/init.php')) {
+        add_action('admin_notices', function() {
+            echo '<div class="error"><p>' . 
+                 __('OpenNode library is missing. Please reinstall the plugin.', 'opennode-for-woocommerce') . 
+                 '</p></div>';
+        });
+        return;
+    }
 
     define('PLUGIN_DIR', plugins_url(basename(plugin_dir_path(__FILE__)), basename(__FILE__)) . '/');
 
+    // Load OpenNode library
     require_once(__DIR__ . '/lib/opennode/init.php');
 
     class WC_Gateway_OpenNode extends WC_Payment_Gateway
@@ -74,6 +92,8 @@ function opennode_init()
                 'products',
                 'refunds',
                 'checkout_block',
+                'cart_block',
+                'cart_checkout_block',
             );
 
             $this->init_form_fields();
@@ -286,72 +306,74 @@ function opennode_init()
         }
     }
 
-    function add_opennode_gateway($methods)
-    {
+    // Add the gateway to WooCommerce
+    add_filter('woocommerce_payment_gateways', function($methods) {
         $methods[] = 'WC_Gateway_OpenNode';
-
         return $methods;
+    });
+
+    // Initialize blocks support
+    add_action('init', 'opennode_init_blocks_support');
+}
+
+// Move blocks support initialization to a separate function
+function opennode_init_blocks_support() {
+    // Only load blocks integration if WC Blocks is active
+    if (!class_exists('Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType')) {
+        return;
     }
 
-    add_filter('woocommerce_payment_gateways', 'add_opennode_gateway');
-    
-    /**
-     * Ensure gateway is available for blocks checkout
-     */
-    function opennode_ensure_gateway_available($gateways) {
-        // Only add our gateway if not present and it should be available
-        if (!isset($gateways['opennode'])) {
-            $all_gateways = WC()->payment_gateways->payment_gateways();
-            if (isset($all_gateways['opennode']) && $all_gateways['opennode']->is_available()) {
-                $gateways['opennode'] = $all_gateways['opennode'];
+    // Register the blocks integration
+    add_action(
+        'woocommerce_blocks_payment_method_type_registration',
+        function($payment_method_registry) {
+            if (!class_exists('OpenNode_Payment_Blocks')) {
+                require_once OPENNODE_PLUGIN_PATH . 'includes/class-opennode-blocks.php';
             }
+            $payment_method_registry->register(new OpenNode_Payment_Blocks());
         }
-        return $gateways;
-    }
-    add_filter('woocommerce_available_payment_gateways', 'opennode_ensure_gateway_available', 100);
-    
-    /**
-     * Initialize blocks integration if WooCommerce Blocks is active
-     */
-    function opennode_init_blocks_support() {
-        // Only load blocks integration if WC Blocks is active
-        if (!class_exists('Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType')) {
+    );
+
+    // Register script for blocks checkout
+    add_action('wp_enqueue_scripts', function() {
+        // Only load on cart and checkout pages
+        if (!is_checkout() && !is_cart()) {
             return;
         }
+
+        $script_path = OPENNODE_PLUGIN_URL . 'assets/js/blocks-checkout.js';
+        $script_asset_path = OPENNODE_PLUGIN_PATH . 'assets/js/blocks-checkout.asset.php';
         
-        // Register the blocks integration
-        add_action(
-            'woocommerce_blocks_payment_method_type_registration',
-            function($payment_method_registry) {
-                require_once OPENNODE_PLUGIN_PATH . 'includes/class-opennode-blocks.php';
-                $payment_method_registry->register(new OpenNode_Payment_Blocks());
-            }
+        $script_asset = file_exists($script_asset_path)
+            ? require($script_asset_path)
+            : array('dependencies' => array(), 'version' => OPENNODE_WOOCOMMERCE_VERSION);
+
+        wp_register_script(
+            'opennode-payment-blocks',
+            $script_path,
+            array_merge(
+                ['wp-element', 'wc-blocks-registry', 'wp-i18n', 'wc-settings', 'wc-blocks-data-store'],
+                $script_asset['dependencies']
+            ),
+            $script_asset['version'],
+            true
         );
-        
-        // Register script for blocks checkout (only on checkout page)
-        add_action('wp_enqueue_scripts', function() {
-            // Load on both cart and checkout pages
-            if (!is_checkout() && !is_cart()) {
-                return;
-            }
-            
-            // Register script for blocks checkout
-            wp_enqueue_script(
+
+        if (function_exists('wp_set_script_translations')) {
+            wp_set_script_translations(
                 'opennode-payment-blocks',
-                OPENNODE_PLUGIN_URL . 'assets/js/blocks-checkout.js',
-                ['wp-element', 'wc-blocks-registry', 'wp-i18n'],
-                OPENNODE_WOOCOMMERCE_VERSION,
-                true
+                'opennode-for-woocommerce'
             );
-            
-            // Add gateway data for the script
-            $gateway = new WC_Gateway_OpenNode();
-            wp_localize_script('opennode-payment-blocks', 'opennode_data', [
-                'title' => $gateway->title,
-                'description' => $gateway->description,
-                'supports' => $gateway->supports,
-            ]);
-        });
-    }
-    add_action('woocommerce_blocks_loaded', 'opennode_init_blocks_support');
+        }
+
+        // Add gateway data for the script
+        $gateway = new WC_Gateway_OpenNode();
+        wp_localize_script('opennode-payment-blocks', 'opennode_data', [
+            'title' => $gateway->title,
+            'description' => $gateway->description,
+            'supports' => $gateway->supports,
+        ]);
+
+        wp_enqueue_script('opennode-payment-blocks');
+    });
 }
