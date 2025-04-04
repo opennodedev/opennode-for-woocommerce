@@ -41,8 +41,13 @@ This plugin allows stores that use Wordpress WooCommerce shopping cart system to
 
 == Changelog ==
 
-= 1.5.4 =
-* Added support for WooCommerce 8.3+ Cart and Checkout blocks
+= 1.5.6 =
+* Fixed compatibility with WooCommerce block editor - OpenNode payment method now properly appears in Payment Options block settings
+* Improved block editor integration and script loading
+* Added proper payment method icon support in block editor
 
 = 1.5.5 =
 * Fixed bug on cart page
+
+= 1.5.4 =
+* Added support for WooCommerce 8.3+ Cart and Checkout blocks
