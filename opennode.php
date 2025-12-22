@@ -4,18 +4,18 @@
 Plugin Name: WooCommerce Payment Gateway - OpenNode
 Plugin URI: https://opennode.com
 Description: Accept Bitcoin Instantly via OpenNode
-Version: 1.5.6
+Version: 1.5.7
 Author: OpenNode
 Author URI: https://opennode.com/about
 Text Domain: opennode-for-woocommerce
 Domain Path: /languages
 WC requires at least: 5.0
-WC tested up to: 8.5
+WC tested up to: 10.4
 */
 
 add_action('plugins_loaded', 'opennode_init', 11);
 
-define('OPENNODE_WOOCOMMERCE_VERSION', '1.5.6');
+define('OPENNODE_WOOCOMMERCE_VERSION', '1.5.7');
 define('OPENNODE_CHECKOUT_PATH', 'https://checkout.opennode.com/');
 define('OPENNODE_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('OPENNODE_PLUGIN_URL', plugin_dir_url(__FILE__));
