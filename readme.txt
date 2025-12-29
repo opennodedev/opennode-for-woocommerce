@@ -3,10 +3,10 @@ Contributors: OpenNode
 Donate link: https://opennode.com
 Tags: bitcoin, lightning-network, woocommerce, payment-gateway, cryptocurrency
 Requires at least: 4.0
-Tested up to: 6.4
+Tested up to: 6.9
 WC requires at least: 5.0
-WC tested up to: 8.5
-Stable tag: 1.5.5
+WC tested up to: 10.4
+Stable tag: 1.5.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -40,6 +40,10 @@ This plugin allows stores that use Wordpress WooCommerce shopping cart system to
 6. Check "Enable Cryptocurrency payments via OpenNode" checkbox.
 
 == Changelog ==
+
+= 1.5.7 =
+* Fixed HPOS (High-Performance Order Storage) compatibility for order metadata
+* Fixed incorrect error message in payment callback
 
 = 1.5.6 =
 * Fixed compatibility with WooCommerce block editor - OpenNode payment method now properly appears in Payment Options block settings
