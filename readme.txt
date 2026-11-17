@@ -6,7 +6,7 @@ Requires at least: 4.0
 Tested up to: 6.9
 WC requires at least: 5.0
 WC tested up to: 10.4
-Stable tag: 1.5.7
+Stable tag: 1.5.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -40,6 +40,11 @@ This plugin allows stores that use Wordpress WooCommerce shopping cart system to
 6. Check "Enable Cryptocurrency payments via OpenNode" checkbox.
 
 == Changelog ==
+
+= 1.5.8 =
+* Security: requests to the OpenNode API now verify the server's TLS certificate. If checkout fails with an SSL certificate error after updating, your server's CA certificates are missing or out of date; ask your hosting provider to update them
+* Security: payment callbacks with a malformed signature are rejected, and the payment status is always checked against the charge created for the order
+* Security: error messages printed by the payment callback are escaped
 
 = 1.5.7 =
 * Fixed HPOS (High-Performance Order Storage) compatibility for order metadata

@@ -4,7 +4,7 @@
 Plugin Name: WooCommerce Payment Gateway - OpenNode
 Plugin URI: https://opennode.com
 Description: Accept Bitcoin Instantly via OpenNode
-Version: 1.5.7
+Version: 1.5.8
 Author: OpenNode
 Author URI: https://opennode.com/about
 Text Domain: opennode-for-woocommerce
@@ -15,7 +15,7 @@ WC tested up to: 10.4
 
 add_action('plugins_loaded', 'opennode_init', 11);
 
-define('OPENNODE_WOOCOMMERCE_VERSION', '1.5.7');
+define('OPENNODE_WOOCOMMERCE_VERSION', '1.5.8');
 define('OPENNODE_CHECKOUT_PATH', 'https://checkout.opennode.com/');
 define('OPENNODE_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('OPENNODE_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -235,12 +235,15 @@ function opennode_init()
                 }
 
 
-                if (strcmp(hash_hmac('sha256', $token, $this->api_auth_token), $request['hashed_order']) != 0) {
+                $signature = isset($request['hashed_order']) ? $request['hashed_order'] : '';
+
+                if (!is_string($signature) || !hash_equals(hash_hmac('sha256', $token, $this->api_auth_token), $signature)) {
                     throw new Exception('Request is not signed with the same API Key, ignoring.');
                 }
 
                 $this->init_opennode();
-                $cgOrder = \OpenNode\Merchant\Order::find($request['id']);
+                // Look up the charge this order was created with, never an ID taken from the request.
+                $cgOrder = \OpenNode\Merchant\Order::find($token);
 
                 if (!$cgOrder) {
                     throw new Exception('OpenNode Order #' . $order->get_id() . ' does not exists');
@@ -282,7 +285,7 @@ function opennode_init()
                         break;
                 }
             } catch (Exception $e) {
-                die(get_class($e) . ': ' . $e->getMessage());
+                die(esc_html(get_class($e) . ': ' . $e->getMessage()));
             }
         }
 
